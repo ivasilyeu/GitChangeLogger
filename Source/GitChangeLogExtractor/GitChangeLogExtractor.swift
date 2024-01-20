@@ -34,7 +34,8 @@ struct GitChangeLogExtractor {
 //        git.standardOutput = outputPipe
 
         let fileManager = FileManager.default
-        try fileManager.createDirectory(atPath: outputPath, withIntermediateDirectories: true)
+        let outputDir = (outputPath as NSString).deletingLastPathComponent
+        try fileManager.createDirectory(atPath: outputDir, withIntermediateDirectories: true)
         guard fileManager.createFile(atPath: outputPath, contents: nil) else {
             return
         }

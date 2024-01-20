@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "GitChangeLogger",
+    platforms: [
+        .macOS(.v13),
+    ],
     products: [
         // Products can be used to vend plugins, making them visible to other packages.
         .plugin(
