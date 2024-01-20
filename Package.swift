@@ -16,7 +16,9 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .plugin(
             name: "GitChangeLogger",
-            capability: .buildTool()
+            capability: .buildTool(),
+            dependencies: ["GitChangeLogExtractor"]
         ),
+        .executableTarget(name: "GitChangeLogExtractor"),
     ]
 )

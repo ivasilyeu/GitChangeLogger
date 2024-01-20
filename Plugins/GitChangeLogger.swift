@@ -22,7 +22,7 @@ extension GitChangeLogger: XcodeBuildToolPlugin {
 
     func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
     
-        let extractor = try context.tool(named: "ChangeLogExtractor")
+        let extractor = try context.tool(named: "GitChangeLogExtractor")
         let directory = context.pluginWorkDirectory
 
         let baseBranch = "develop"
