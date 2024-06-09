@@ -81,5 +81,7 @@ struct GitChangeLogExtractor {
 
 //        let stdout = FileHandle.standardOutput
 //        try stdout.write(contentsOf: data)
+
+        print("GitChangeLogExtractor | done!")
     }
 }
