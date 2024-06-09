@@ -20,6 +20,9 @@ struct GitChangeLogExtractor: ParsableCommand {
     @Option(name: .shortAndLong, help: "Name of the base branch to generate the changelog against")
     var baseBranch: String = "master"
 
+    @Argument(parsing: .allUnrecognized)
+    var other: [String]
+
     mutating func run() throws {
 
         print("running GitChangeLogExtractor...")
