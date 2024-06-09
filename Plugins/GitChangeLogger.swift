@@ -7,7 +7,7 @@ struct GitChangeLogger: XcodeCommandPlugin {
 
     func performCommand(context: XcodeProjectPlugin.XcodePluginContext, arguments: [String]) throws {
 
-        let directory = context.pluginWorkDirectory
+        let directory = context.xcodeProject.directory
         let tool = try context.tool(named: "GitChangeLogExtractor")
         try run(workDirectory: directory, tool: tool)
     }
@@ -17,7 +17,7 @@ extension GitChangeLogger: CommandPlugin {
     
     func performCommand(context: PackagePlugin.PluginContext, arguments: [String]) async throws {
 
-        let directory = context.pluginWorkDirectory
+        let directory = context.package.directory
         let tool = try context.tool(named: "GitChangeLogExtractor")
         try run(workDirectory: directory, tool: tool)
     }
