@@ -34,7 +34,7 @@ fileprivate extension GitChangeLogger {
         let extractor = Process()
         extractor.executableURL = URL(fileURLWithPath: tool.path.string)
 
-        let arguments = arguments + [output.string]
+        let arguments = [output.string] + arguments
 
         print("GitChangeLogger | arguments: \(arguments)")
 
