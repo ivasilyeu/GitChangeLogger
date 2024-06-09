@@ -27,13 +27,22 @@ fileprivate extension GitChangeLogger {
 
     func run(workDirectory: PackagePlugin.Path, tool: PluginContext.Tool, arguments: [String]) throws {
 
+        print("running GitChangeLogger...")
+
         let output = workDirectory.appending(subpath: "changelog/changelog.md")
 
         let extractor = Process()
         extractor.executableURL = URL(fileURLWithPath: tool.path.string)
-        extractor.arguments = arguments + [output.string]
+
+        let arguments = arguments + [output.string]
+
+        print("GitChangeLogger | arguments: \(arguments)")
+
+        extractor.arguments = arguments
 
         try extractor.run()
         extractor.waitUntilExit()
+
+        print("GitChangeLogger | done!")
     }
 }
