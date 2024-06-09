@@ -5,44 +5,40 @@
 //  Created by IV on 20.01.2024.
 //
 
+import ArgumentParser
 import Foundation
 
 @main
-struct GitChangeLogExtractor {
+struct GitChangeLogExtractor: ParsableCommand {
 
-    static func main() throws -> Void {
+    @Argument(help: "Path to output file for the changelog")
+    var output: String
+
+    @Option(name: .shortAndLong, help: "Name of the target branch to generate the changelog against")
+    var target: String = "develop"
+
+    @Option(name: .shortAndLong, help: "Name of the base branch to generate the changelog against")
+    var base: String = "master"
+
+    mutating func run() throws {
 
         print("running GitChangeLogExtractor...")
-
-        let arguments = CommandLine.arguments
-
-        let baseBranchNameIndex = arguments.index(arguments.firstIndex(of: "--base")!, offsetBy: 1)
-        let baseBranchName = arguments[baseBranchNameIndex]
-
-        print("GitChangeLogExtractor | base branch: \(baseBranchName)")
-
-        let targetBranchNameIndex = arguments.index(arguments.firstIndex(of: "--target")!, offsetBy: 1)
-        let targetBranchName = arguments[targetBranchNameIndex]
-
-        print("GitChangeLogExtractor | target branch: \(targetBranchName)")
-
-        let outputPathIndex = arguments.index(arguments.firstIndex(of: "--output")!, offsetBy: 1)
-        let outputPath = arguments[outputPathIndex]
-
-        print("GitChangeLogExtractor | output path: \(outputPath)")
+        print("GitChangeLogExtractor | base branch: \(base)")
+        print("GitChangeLogExtractor | target branch: \(target)")
+        print("GitChangeLogExtractor | output path: \(output)")
 
         let gitPath = "/usr/bin/git"
         let git = Process()
         git.executableURL = URL(fileURLWithPath: gitPath)
         git.arguments = ["log",
-                         "\(baseBranchName)..\(targetBranchName)",
+                         "\(base)..\(target)",
                          "--pretty='format:%s %an <%ae>%n'"]
 
 //        let outputPipe = Pipe()
 //        git.standardOutput = outputPipe
 
         let fileManager = FileManager.default
-        let outputDir = (outputPath as NSString).deletingLastPathComponent
+        let outputDir = (output as NSString).deletingLastPathComponent
         
         do {
             try fileManager.createDirectory(atPath: outputDir, withIntermediateDirectories: true)
@@ -50,12 +46,12 @@ struct GitChangeLogExtractor {
             print("GitChangeLogExtractor | error while creating output directory: \(error)")
         }
 
-        if !fileManager.createFile(atPath: outputPath, contents: nil) {
+        if !fileManager.createFile(atPath: output, contents: nil) {
 
             print("GitChangeLogExtractor | error while creating output file")
         }
 
-        guard let outputHandle = FileHandle(forWritingAtPath: outputPath) else {
+        guard let outputHandle = FileHandle(forWritingAtPath: output) else {
 
             print("GitChangeLogExtractor | error while opening file handle for the output file")
             return
