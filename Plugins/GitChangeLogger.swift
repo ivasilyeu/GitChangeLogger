@@ -2,10 +2,6 @@ import PackagePlugin
 import XcodeProjectPlugin
 import Foundation
 
-/**
- - Parameter base: Base branch to generate changelog against. Default value is `master`.
- - Parameter target: Target branch to generate changelog against. Default value is `develop`.
- */
 @main
 struct GitChangeLogger: CommandPlugin {
 

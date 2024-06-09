@@ -15,23 +15,23 @@ struct GitChangeLogExtractor: ParsableCommand {
     var output: String
 
     @Option(name: .shortAndLong, help: "Name of the target branch to generate the changelog against")
-    var target: String = "develop"
+    var targetBranch: String = "develop"
 
     @Option(name: .shortAndLong, help: "Name of the base branch to generate the changelog against")
-    var base: String = "master"
+    var baseBranch: String = "master"
 
     mutating func run() throws {
 
         print("running GitChangeLogExtractor...")
-        print("GitChangeLogExtractor | base branch: \(base)")
-        print("GitChangeLogExtractor | target branch: \(target)")
+        print("GitChangeLogExtractor | base branch: \(baseBranch)")
+        print("GitChangeLogExtractor | target branch: \(targetBranch)")
         print("GitChangeLogExtractor | output path: \(output)")
 
         let gitPath = "/usr/bin/git"
         let git = Process()
         git.executableURL = URL(fileURLWithPath: gitPath)
         git.arguments = ["log",
-                         "\(base)..\(target)",
+                         "\(baseBranch)..\(targetBranch)",
                          "--pretty='format:%s %an <%ae>%n'"]
 
 //        let outputPipe = Pipe()
