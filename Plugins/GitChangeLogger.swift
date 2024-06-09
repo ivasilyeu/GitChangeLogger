@@ -27,8 +27,8 @@ fileprivate extension GitChangeLogger {
 
     func run(workDirectory: PackagePlugin.Path, tool: PluginContext.Tool) throws {
 
-        let baseBranch = "develop"
-        let targetBranch = "delayed/SFFEAT0010489-landing-redesign"
+        let baseBranch = "master"
+        let targetBranch = "develop"
 
 
         let output = workDirectory.appending(subpath: "changelog/changelog.md")
