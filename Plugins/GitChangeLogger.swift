@@ -1,58 +1,30 @@
 import PackagePlugin
+import XcodeProjectPlugin
+import Foundation
 
 @main
-struct GitChangeLogger: BuildToolPlugin {
+struct GitChangeLogger: XcodeCommandPlugin {
 
-    func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
-
-        let git = try context.tool(named: "git")
-        let directory = context.pluginWorkDirectory
+    func performCommand(context: XcodeProjectPlugin.XcodePluginContext, arguments: [String]) throws {
 
         let baseBranch = "develop"
         let targetBranch = "delayed/SFFEAT0010489-landing-redesign"
 
-        return [createCommand(tool: git, baseBranchName: baseBranch, targetBranchName: targetBranch, workDirectory: directory)]
-    }
-}
-
-#if canImport(XcodeProjectPlugin)
-import XcodeProjectPlugin
-
-extension GitChangeLogger: XcodeBuildToolPlugin {
-
-    func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
-    
-        let extractor = try context.tool(named: "GitChangeLogExtractor")
-        let directory = context.pluginWorkDirectory
-
-        let baseBranch = "develop"
-        let targetBranch = "delayed/SFFEAT0010489-landing-redesign"
-
-        return [createCommand(tool: extractor, baseBranchName: baseBranch, targetBranchName: targetBranch, workDirectory: directory)]
-    }
-}
-
-#endif
-
-extension GitChangeLogger {
-
-    func createCommand(tool: PluginContext.Tool, baseBranchName: String, targetBranchName: String, workDirectory: Path) -> Command {
-
+        let workDirectory = context.pluginWorkDirectory
         let output = workDirectory.appending(subpath: "changelog/changelog.md")
 
-        return Command.buildCommand(displayName: "Generating changelog file",
-                             executable: tool.path,
-                             arguments: ["--base", baseBranchName,
-                                         "--target", targetBranchName,
-                                         "--output", output.string],
-                             outputFiles: [output])
+        let extractorTool = try context.tool(named: "GitChangeLogExtractor")
 
-//        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-//        let output = String(decoding: outputData, as: UTF8.self)
-//
-//        let contributors = Set(output.components(separatedBy: CharacterSet.newlines)).sorted().filter { !$0.isEmpty }
-//        try contributors.joined(separator: "\n").write(toFile: "CONTRIBUTORS.txt", atomically: true, encoding: .utf8)
+        let extractor = Process()
+        extractor.executableURL = URL(fileURLWithPath: extractorTool.path.string)
+        extractor.arguments = ["--base", baseBranch,
+                         "--target", targetBranch,
+                         "--output", output.string]
 
+//        let outputPipe = Pipe()
+//        extractor.standardOutput = outputPipe
 
+        try extractor.run()
+        extractor.waitUntilExit()
     }
 }

@@ -19,7 +19,9 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .plugin(
             name: "GitChangeLogger",
-            capability: .buildTool(),
+            capability: .command(intent: PluginCommandIntent.custom(verb: "generate-changelog", description: "Generates Changelog.md file for the current (target) Git branch against the latest release (base) branch"), permissions:
+                                    [PluginPermission.allowNetworkConnections(scope: PluginNetworkPermissionScope.all(), reason: "PluginPermission.allowNetworkConnections-reason"),
+                                     PluginPermission.writeToPackageDirectory(reason: "PluginPermission.writeToPackageDirectory-reason")]),
             dependencies: ["GitChangeLogExtractor"]
         ),
         .executableTarget(name: "GitChangeLogExtractor"),
