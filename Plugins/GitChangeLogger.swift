@@ -35,7 +35,7 @@ fileprivate extension GitChangeLogger {
 
         let extractor = Process()
         extractor.executableURL = URL(fileURLWithPath: tool.path.string)
-        extractor.arguments = arguments + ["--output", output.string]
+        extractor.arguments = arguments + [output.string]
 
         try extractor.run()
         extractor.waitUntilExit()
