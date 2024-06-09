@@ -12,6 +12,8 @@ struct GitChangeLogExtractor {
 
     static func main() throws -> Void {
 
+        print("GitChangeLogExtractor.main")
+
         let arguments = CommandLine.arguments
 
         let baseBranchNameIndex = arguments.index(arguments.firstIndex(of: "--base")!, offsetBy: 1)
